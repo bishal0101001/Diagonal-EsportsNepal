@@ -1,0 +1,124 @@
+.__event_table {
+  width: 70%;
+  margin: 20px auto;
+
+  .table-only-container {
+    min-height: 450px;
+  }
+
+  h2 {
+    text-align: center;
+    background-color: $secondary-color;
+    padding: 5px 0;
+  }
+
+  .__table {
+    width: 100%;
+    font-size: 18px;
+
+    thead {
+      background-color: rgba($color: #fff, $alpha: 0.5);
+      border-bottom: 2px solid #000;
+
+      tr {
+        th {
+          padding: 5px 10px;
+          border-bottom-left-radius: 10px;
+          border-top-right-radius: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+
+    tbody {
+      background-color: (#ff9900);
+      tr {
+        text-align: center;
+
+        &.first {
+          background-color: #e5f7bf;
+        }
+
+        td {
+          padding: 5px 0;
+          border-bottom-left-radius: 10px;
+          border-top-right-radius: 10px;
+        }
+
+        .rank {
+          font-size: 20px;
+        }
+
+        .team {
+          font-weight: 600;
+          padding: 0 10px;
+        }
+      }
+    }
+  }
+
+  .event-info-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
+    position: relative;
+
+    .__event-info {
+      padding: 20px 10px;
+      background-color: $card-color;
+      border-radius: 10px;
+      color: #fff;
+      min-width: 280px;
+      margin-right: 10px;
+      height: 250px;
+      max-height: auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+
+      ul {
+        list-style-type: none;
+        margin: 10px;
+        display: inline-block;
+
+        li {
+          padding: 5px;
+
+          &:first-child {
+            font-size: 18px;
+            font-weight: bold;
+            color: $secondary-color;
+          }
+        }
+      }
+
+      .button-container {
+        margin: 10px auto;
+        button {
+          padding: 10px;
+          font-size: 16px;
+          align-items: center;
+          border-radius: 5px;
+        }
+      }
+
+      .info {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    .pagination {
+      width: 100%;
+      margin: 10px auto;
+      align-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .pagination-nav {
+        width: 100%;
+      }
+    }
+  }
+}

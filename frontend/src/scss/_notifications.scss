@@ -1,0 +1,30 @@
+.__notifications {
+  display: flex;
+  width: 95%;
+  height: 60vh;
+  margin: 20px auto 0;
+  justify-content: space-between;
+
+  .tournament-invitation {
+    background-color: $dark-gray;
+    width: 60%;
+    color: #fff;
+    padding: 20px;
+    height: auto;
+  }
+
+  .friend-request {
+    width: 40%;
+    .lists {
+      height: 90%;
+      overflow: auto;
+      ul {
+        li {
+          color: #fff;
+          background-color: #2b2b2b;
+        }
+      }
+    }
+  }
+
+}

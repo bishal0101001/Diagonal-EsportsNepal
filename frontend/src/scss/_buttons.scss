@@ -1,0 +1,90 @@
+%btn {
+  padding: 6px 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin: 0 10px;
+  border: none;
+}
+
+.sign-up {
+  @extend %btn;
+  border: 2px solid $secondary-color;
+  background-color: rgba(#000, 0.3);
+  color: $secondary-color;
+  transition: 0.2s;
+
+  &:hover {
+    color: #000;
+    background-color: $secondary-color;
+    box-shadow: 0 0 10px $secondary-color, 0 0 40px $secondary-color,
+      0 0 80px $secondary-color;
+  }
+}
+
+.login {
+  @extend %btn;
+  background-color: $secondary-color;
+  border: 2px solid $secondary-color;
+  padding: 6px 20px;
+  font-size: 15px;
+
+  &:hover {
+    color: $secondary-color;
+    border: 2px solid $secondary-color;
+    background-color: rgba(#000, 0.3);
+    // background: #000;
+    box-shadow: 0 0 10px $secondary-color, 0 0 40px $secondary-color,
+      0 0 80px $secondary-color;
+  }
+}
+
+.register {
+  @extend %btn;
+
+  padding: 10px;
+  font-size: 16px;
+  font-weight: 520;
+  align-items: center;
+  border-radius: 5px;
+  background-color: $primitive-yellow;
+  border: 2px solid $primitive-yellow;
+
+  &:hover {
+    border: 2px solid $primitive-yellow;
+    box-shadow: 0 0 10px $primitive-yellow, 0 0 40px $primitive-yellow,
+      0 0 80px $primitive-yellow;
+  }
+}
+
+.login-btn {
+  margin: 20px auto;
+  padding: 10px 0;
+  background-color: $primary-color;
+  color: $primitive-yellow;
+  font-size: 16px;
+  width: 80px;
+  cursor: pointer;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: $primitive-yellow;
+    color: $primary-color;
+    border: 2px solid $primitive-yellow;
+    box-shadow: 0 0 10px $primitive-yellow, 0 0 40px $primitive-yellow,
+      0 0 80px $primitive-yellow;
+  }
+}
+
+.invite-button {
+  @extend %btn;
+  background-color: $blue-shade;
+  color: #fff;
+  font-size: 14px;
+}
+
+.delete-button {
+  @extend %btn;
+  background-color: $dark-gray;
+  font-size: 14px;
+  color: #fff;
+}

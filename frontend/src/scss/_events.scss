@@ -1,0 +1,35 @@
+.__events_page {
+  margin: 20px;
+  a {
+    text-decoration: none;
+    color: $primary-color;
+  }
+
+  .event-container {
+    h1 {
+      margin: 10px;
+    }
+
+    .info-container {
+      background-color: rgb(71, 71, 71);
+      padding: 20px;
+      border-left: 10px solid $light-color;
+
+      h2 {
+        color: #fff;
+        width: 250px;
+        padding-left: 10px;
+        margin: 20px 0;
+        border-bottom: 1px solid rgb(158, 158, 158);
+      }
+
+      p {
+        color: $gray-color;
+      }
+    }
+  }
+
+  .routes {
+    display: flex;
+  }
+}

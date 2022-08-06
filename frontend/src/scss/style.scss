@@ -1,0 +1,155 @@
+$primary-color: #000;
+$secondary-color: #ff0000;
+$blue-shade: #1976d2;
+$light-color: #77b5fd;
+$gray-color: #bbb9b9;
+$dark-gray: #474747;
+$primitive-yellow: #ff9900;
+$card-color: rgba(
+  $color: #000,
+  $alpha: 0.5,
+);
+
+@import "header";
+@import "login";
+@import "register";
+@import "buttons";
+@import "eventtable";
+@import "event";
+@import "events";
+@import "tournamentcard";
+@import "expanding-card";
+@import "teams";
+@import "notifications";
+@import url('http://fonts.cdnfonts.com/css/kollektif');
+@import url('http://fonts.cdnfonts.com/css/blanka');
+@import url('http://fonts.cdnfonts.com/css/anurati?styles=15799');
+// @font-face {
+//   font-family: 'Kollektif';
+//   src: url('../fonts/Kollektif.ttf');
+// }
+// @font-face {
+//   font-family: 'Kollektif Regular';
+//   font-style: normal;
+//   font-weight: normal;
+//   src: local('Kollektif Regular'), url('Kollektif.ttf') format('ttf');
+//   }
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Raleway", sans-serif;
+  // font-family: 'Kollektif', sans-serif;
+                                                
+
+  // background: rgb(0, 0, 0);
+  // background-image: linear-gradient(
+  //   45deg,
+  //   rgba(0, 0, 0, 1) 0%,
+  //   rgba(186, 21, 37, 1) 70%
+  // );
+  ////////
+  // background: rgb(63, 94, 251);
+  // background: radial-gradient(
+  //   circle,
+  //   rgba(63, 94, 251, 1) 0%,
+  //   rgba(0, 0, 0, 1) 62%
+  // );
+  //////
+  // background: rgb(63, 94, 251);
+  // background: radial-gradient(
+  //   circle,
+  //   rgba(63, 94, 251, 1) 0%,
+  //   rgba(0, 0, 0, 1) 28%
+  // );
+
+  //////
+
+  // background: rgb(63, 94, 251);
+  // background: radial-gradient(
+  //   circle,
+  //   rgba(63, 94, 251, 1) 0%,
+  //   rgba(255, 255, 255, 1) 28%
+  // );
+
+  /////
+  // background: rgb(63, 94, 251);
+  // background: radial-gradient(
+  //   circle,
+  //   rgba(63, 94, 251, 1) 0%,
+  //   rgba(255, 255, 255, 1) 97%
+  // );
+
+  /////
+  // background: rgb(154, 0, 0);
+  // background: radial-gradient(
+  //   circle,
+  //   rgba(154, 0, 0, 1) 0%,
+  //   rgba(255, 255, 255, 1) 97%
+  // );
+
+  /////
+  background: rgb(255, 0, 0);
+  background: radial-gradient(
+    circle,
+    rgba(255, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 40%
+  );
+  background-size: 200%;
+  transition: background-position 9s;
+
+  // &:hover {
+  //   background-position: right;
+  // }
+
+  -webkit-animation: AnimationName 5s ease infinite;
+  -moz-animation: AnimationName 5s ease infinite;
+  animation: AnimationName 25s ease infinite;
+
+  @-webkit-keyframes AnimationName {
+    0% {
+      background-position: 0% 5%;
+    }
+    50% {
+      background-position: 100% 96%;
+    }
+    100% {
+      background-position: 0% 5%;
+    }
+  }
+  @-moz-keyframes AnimationName {
+    0% {
+      background-position: 0% 5%;
+    }
+    50% {
+      background-position: 100% 96%;
+    }
+    100% {
+      background-position: 0% 5%;
+    }
+  }
+  @keyframes AnimationName {
+    0% {
+      background-position: 0% 5%;
+    }
+    50% {
+      background-position: 100% 96%;
+    }
+    100% {
+      background-position: 0% 5%;
+    }
+  }
+
+  .App {
+    background-color: rgba($gray-color, 0.6);
+    background-size: 200%;
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    padding-bottom: 200px;
+  }
+}

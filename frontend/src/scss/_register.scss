@@ -1,0 +1,56 @@
+.__register {
+  width: 40%;
+  // min-height: 60vh;
+  height: auto;
+  padding: 20px 30px;
+  margin: 30px auto;
+  background-color: #fff;
+  border-radius: 10px;
+
+  .MuiFormControl-root {
+    margin: 5px 0;
+    width: 90%;
+  }
+
+  .MuiInputAdornment-root {
+    .MuiSvgIcon-root {
+      cursor: pointer;
+    }
+  }
+
+  // .MuiFormControl-root {
+  // }
+
+  h1 {
+    text-align: center;
+    color: $primitive-yellow;
+    text-transform: uppercase;
+    font-weight: bolder;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+
+    button {
+      margin: 20px auto 10px;
+    }
+
+    .show-password {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+
+      input {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .redirect-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
