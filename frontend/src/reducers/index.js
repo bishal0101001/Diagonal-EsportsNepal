@@ -10,7 +10,8 @@ import {
   userRegisterReducer,
   userListReducer,
   userSendFriendRequestReducer,
-  acceptFriendRequestReducer,
+  // acceptFriendRequestReducer,
+  friendsReducer,
 } from "./userReducer";
 import {
   registerForTournamentReducer,
@@ -30,5 +31,6 @@ export default combineReducers({
   registeredForTournament: registerForTournamentReducer,
   isPaid: paymentReducer,
   notifications: notificationReducer,
-  acceptFriendRequest: acceptFriendRequestReducer,
+  // acceptFriendRequest: acceptFriendRequestReducer,
+  friends: friendsReducer,
 });

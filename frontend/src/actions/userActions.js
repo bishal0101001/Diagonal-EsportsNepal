@@ -16,14 +16,19 @@ import {
   USER_FRIEND_INVOKE_REQUEST,
   USER_FRIEND_INVOKE_SUCCESS,
   USER_FRIEND_INVOKE_FAIL,
+  USER_FRIEND_CANCEL_REQUEST,
   USER_FRIEND_CANCEL_SUCCESS,
   USER_FRIEND_CANCEL_FAIL,
-  ACCEPT_FRIEND_REQUEST_SUCCESS,
+  // ACCEPT_FRIEND_REQUEST_SUCCESS,
   ACCEPT_FRIEND_REQUEST_FAILED,
+  REMOVE_FRIEND_SUCCESS,
+  REMOVE_FRIEND_FAILED,
+  FRIENDS_LOAD_SUCCESS,
+  FRIEND_ADD_SUCCESS,
+  ACCEPT_FRIEND_REQUEST_SUCCESS,
 } from "../constants/userConstants";
 
 import { renderError } from "../utils/renderActionErrors";
-import { USER_FRIEND_CANCEL_REQUEST } from "./../constants/userConstants";
 
 const configForJson = {
   headers: {
@@ -148,7 +153,6 @@ export const sendFriendRequest =
       dispatch({
         type: USER_FRIEND_INVOKE_REQUEST,
       });
-      console.log(setAuthHeader(token), "token");
       const { data } = await axios.post(
         `/api/user/request?source=${sourceUserId}&destination=${destinationUserId}`,
         {},
@@ -193,7 +197,8 @@ export const cancelFriendRequest =
   };
 
 export const acceptFriendRequests =
-  (sourceUserId, destinationUserId, token) => async (dispatch) => {
+  (sourceUserId, destinationUserId, token, friendRequest) =>
+  async (dispatch) => {
     try {
       const { data } = await axios.post(
         `/api/user/accept?source=${sourceUserId}&destination=${destinationUserId}`,
@@ -201,11 +206,19 @@ export const acceptFriendRequests =
         { headers: setAuthHeader(token) }
       );
 
-      console.log(data, "accepted data");
-      dispatch({
-        type: ACCEPT_FRIEND_REQUEST_SUCCESS,
-        payload: data,
-      });
+      data &&
+        dispatch({
+          type: FRIEND_ADD_SUCCESS,
+          payload: { details: { ...data } },
+        });
+
+      const friends = friendRequest.filter((i) => i.details._id !== data._id);
+
+      friends &&
+        dispatch({
+          type: ACCEPT_FRIEND_REQUEST_SUCCESS,
+          payload: friends,
+        });
     } catch (error) {
       dispatch({
         type: ACCEPT_FRIEND_REQUEST_FAILED,
@@ -214,9 +227,38 @@ export const acceptFriendRequests =
     }
   };
 
+export const removeFriend =
+  (sourceUserId, destinationUserId, token) => async (dispatch) => {
+    try {
+      const { data } = await axios.post(
+        `/api/user/remove?source=${sourceUserId}&destination=${destinationUserId}`,
+        {},
+        { headers: setAuthHeader(token) }
+      );
+
+      dispatch({
+        type: REMOVE_FRIEND_SUCCESS,
+        payload: { details: { ...data } },
+      });
+    } catch (error) {
+      console.log(error, "error");
+      dispatch({
+        type: REMOVE_FRIEND_FAILED,
+        payload: error,
+      });
+    }
+  };
+
 export const friendRequest = (data) => (dispatch) => {
   dispatch({
     type: "NEW_FRIEND_REQUEST",
+    payload: data,
+  });
+};
+
+export const friendsAction = (data) => (dispatch) => {
+  dispatch({
+    type: FRIENDS_LOAD_SUCCESS,
     payload: data,
   });
 };

@@ -172,6 +172,17 @@ const sendRequest = asyncHandler(async (req, res) => {
 
   try {
     session.startTransaction();
+
+    destinationUser.friends?.forEach((item) => {
+      if (item.details._id.toString() === sourceId.toString())
+        throw new Error("Already friends!!!");
+    });
+
+    sourceUser.friends?.forEach((item) => {
+      if (item.details._id.toString() === destinationId.toString())
+        throw new Error("Already friends!!!");
+    });
+
     destinationUser.pool.friendRequests?.forEach((item) => {
       if (item.details._id.toString() === sourceId.toString())
         throw new Error("Already sent!!!");
@@ -306,13 +317,7 @@ const cancelRequest = asyncHandler(async (req, res) => {
 
     if (from.acknowledged && to.acknowledged) {
       (async (emit) => {
-        // const userId = sourceId;
         const user = await getUser(destinationId);
-        // const connectionId = user.map((item) => {
-        //   if (item.userId == destinationId) return item.connectionId;
-        // });
-        // console.log(connectionId, "connectionId");
-        // emit(req, connectionId, emitData, "cancelFriendRequest");
         console.log(user[0]?.connectionId, "connectionId");
         emit(req, user[0]?.connectionId, emitData, "cancelFriendRequest");
       })(emitNotification);
@@ -342,31 +347,17 @@ const acceptRequest = asyncHandler(async (req, res) => {
     "username pool friends"
   );
 
-  const emitData = {
+  const emitDataToSource = {
+    _id: destinationId,
+    username: destinationUser.username,
+  };
+
+  const emitDataToDestination = {
     _id: sourceId,
     username: sourceUser.username,
   };
 
-  console.log(
-    sourceUser.pool.sentRequests.map((i) => {
-      i;
-    })
-  );
-
-  console.log(sourceUser, "sourceUser");
-
-  console.log(
-    sourceUser.friends.findIndex((i) => i.details._id === destinationId),
-    "index"
-  );
-
-  // console.log(
-  //   sourceUser.pool?.sentRequests.findIndex(
-  //     (i) => i.details._id === destinationId
-  //   ),
-  //   "index of sentReq",
-  //   );
-
+  // VALIDATION //
   if (
     sourceUser.friends.findIndex((i) => i.details._id === destinationId) > 0
   ) {
@@ -463,24 +454,111 @@ const acceptRequest = asyncHandler(async (req, res) => {
     } else {
       (async (emit) => {
         const user = await getUser(sourceId);
-        // console.log(user, "getUser sourceId");
-        // const connectionId = user.map((i) => {
-        //   i.userId == destinationId;
-        //   return i.connectionId;
-        // });
-        // console.log(connectionId, "conn");
-        console.log(user[0].connectionId, "connectionId");
-        emit(req, user[0]?.connectionId, emitData, "acceptFriendRequest");
+        console.log(user[0]?.connectionId, "connectionId");
+        emit(
+          req,
+          user[0]?.connectionId,
+          emitDataToSource,
+          "acceptFriendRequest"
+        );
       })(emitNotification);
     }
 
     await session.commitTransaction();
     session.endSession();
-    res.status(200).json(emitData);
+    res.status(200).json(emitDataToDestination);
   } catch (ex) {
     session.endSession();
     res.status(400);
     throw new Error(ex);
+  }
+});
+
+const removeFriend = asyncHandler(async (req, res) => {
+  const { source: sourceId, destination: destinationId } = req.query;
+  const session = await mongoose.startSession();
+  const sourceUser = await User.findById(sourceId).select("username friends");
+  const destinationUser = await User.findById(destinationId).select(
+    "username friends"
+  );
+
+  const emitDataToDestination = {
+    _id: sourceId,
+    username: sourceUser.username,
+  };
+
+  const emitDataToSource = {
+    _id: destinationId,
+    username: destinationUser.username,
+  };
+
+  try {
+    session.startTransaction();
+    if (
+      destinationUser.friends.filter(
+        (item) => item.details._id.toString() === sourceId.toString()
+      ).length < 1
+    ) {
+      throw new Error("Invalid Attempt from destinationUser");
+    }
+    if (
+      sourceUser.friends.filter(
+        (item) => item.details._id.toString() === destinationId.toString()
+      ).length < 1
+    ) {
+      throw new Error("Invalid Attempt from sourceUser");
+    }
+
+    const from = await User.updateOne(
+      { _id: sourceId },
+      {
+        $pull: {
+          "friends": {
+            details: {
+              _id: destinationId,
+              username: destinationUser.username,
+            },
+          },
+        },
+      }
+    ).session(session);
+    console.log(from, "form");
+
+    const to = await User.updateOne(
+      {
+        _id: destinationId,
+      },
+      {
+        $pull: {
+          "friends": {
+            details: {
+              _id: sourceId,
+              username: sourceUser.username,
+            },
+          },
+        },
+      }
+    ).session(session);
+
+    if (from.acknowledged && to.acknowledged) {
+      (async (emit) => {
+        const user = await getUser(destinationId);
+        console.log(user[0]?.connectionId, "connectionId");
+        emit(req, user[0]?.connectionId, emitDataToDestination, "removeFriend");
+      })(emitNotification);
+    } else {
+      throw new Error("Something went wrong");
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(200).send(emitDataToSource);
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    res.status(400);
+    throw new Error(error);
   }
 });
 
@@ -569,5 +647,6 @@ module.exports = {
   sendRequest,
   cancelRequest,
   acceptRequest,
+  removeFriend,
   decryptUserDetails,
 };

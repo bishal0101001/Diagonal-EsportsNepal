@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -7,16 +7,25 @@ import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
-import { cancelFriendRequest, sendFriendRequest } from "../actions/userActions";
+// import {
+//   cancelFriendRequest,
+//   sendFriendRequest,
+//   removeFriend,
+// } from "../actions/userActions";
 
-const SearchResult = ({ users: usersList, sourceId }) => {
+const SearchResult = ({ onAdd, onCancel, onRemove, sentRequests, friend }) => {
   const {
+    userList,
     userLogin: { userInfo },
+    // friends,
   } = useSelector((state) => state);
+
   const [value, setValue] = useState("");
-  const [sentRequests, setSentRequests] = useState([]);
+  // const [sentRequests, setSentRequests] = useState([]);
+  // const [sentRequests2, setSentRequests2] = useState([]);
+  // const [friend, setFriends] = useState([]);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const alignCenter = {
     display: "flex",
@@ -25,9 +34,12 @@ const SearchResult = ({ users: usersList, sourceId }) => {
     height: "50vh",
   };
 
-  const handleSearch = (e) => {
+  const onSearch = (e) => {
     setValue(e.target.value);
-
+    // const newSentRequests = sentRequests.filter((item) =>
+    //   friends.some((i) => i.details._id !== item.details._id)
+    // );
+    // setSentRequests(newSentRequests);
     if (e.target.value.trim()) {
       navigate(`/search/${e.target.value}`);
     } else {
@@ -35,29 +47,23 @@ const SearchResult = ({ users: usersList, sourceId }) => {
     }
   };
 
-  const handleAdd = (userId, username) => {
-    let sentReq = sentRequests;
-    sentReq.push({ details: { _id: userId, username } });
-    setSentRequests(sentReq);
-    dispatch(sendFriendRequest(sourceId, userId, userInfo.token));
-  };
+  // useEffect(() => {
+  //   setFriends(friends);
+  //   if (userInfo.pool?.hasOwnProperty("sentRequests")) {
+  //     setSentRequests(userInfo.pool.sentRequests);
+  //   } else {
+  //     const pool = { ...userInfo.pool };
+  //     pool.sentRequests = [];
+  //     setSentRequests(pool.sentRequests);
+  //   }
+  // }, [friends, userInfo.pool]);
 
-  const handleCancel = (userId) => {
-    const sentReq = sentRequests;
-    const newArr = sentReq.filter((item) => item.details._id !== userId);
-    setSentRequests(newArr);
-    dispatch(cancelFriendRequest(sourceId, userId, userInfo.token));
-  };
-
-  useEffect(() => {
-    if (userInfo.pool?.hasOwnProperty("sentRequests")) {
-      setSentRequests(userInfo.pool.sentRequests);
-    } else {
-      const pool = { ...userInfo.pool };
-      pool.sentRequests = [];
-      setSentRequests(pool.sentRequests);
-    }
-  }, [setSentRequests, userInfo]);
+  // useMemo(() => {
+  //   const newSentRequests = sentRequests2.filter((item) =>
+  //     friends.some((i) => i.details._id !== item.details._id)
+  //   );
+  //   setSentRequests(newSentRequests);
+  // }, [friends, sentRequests2]);
 
   return userInfo ? (
     <div className="__search">
@@ -67,18 +73,17 @@ const SearchResult = ({ users: usersList, sourceId }) => {
           label="Search..."
           variant="outlined"
           value={value}
-          onChange={handleSearch}
+          onChange={onSearch}
         />
       </div>
-      {usersList.loading ? (
+      {userList.loading ? (
         <Box sx={alignCenter}>
           <CircularProgress />
         </Box>
-      ) : usersList.users?.length > 0 ? (
+      ) : userList.users?.length > 0 ? (
         <ul>
-          {usersList.users.map((user) => (
+          {userList?.users?.map((user) => (
             <li key={user._id}>
-              {/* {console.log(user, "user")} */}
               <div>
                 <span>
                   <img src="/imgs/solo-clash.webp" alt="profile" />
@@ -92,20 +97,25 @@ const SearchResult = ({ users: usersList, sourceId }) => {
                   <Button
                     variant="outlined"
                     color="error"
-                    onClick={() => handleCancel(user._id)}
+                    onClick={() => onCancel(user._id)}
                   >
                     Cancel
                   </Button>
+                ) : friend
+                    ?.map((item) => item.details._id === user._id)
+                    .includes(true) ? (
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => onRemove(user._id, user.username)}
+                  >
+                    Remove
+                  </Button>
                 ) : (
-                  // <InteractiveButton
-                  //   handleAdd={() => handleAdd(user._id)}
-                  //   // loading={sendRequest?.loading}
-                  //   // success={sendRequest?.success}
-                  // />
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => handleAdd(user._id, user.username)}
+                    onClick={() => onAdd(user._id, user.username)}
                   >
                     Add
                   </Button>

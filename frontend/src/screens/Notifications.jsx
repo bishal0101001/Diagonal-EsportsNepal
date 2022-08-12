@@ -8,12 +8,19 @@ const Notifications = () => {
   const {
     notifications,
     userLogin: { userInfo },
-    acceptFriendRequest,
+    friends,
   } = useSelector((state) => state);
 
   const handleAccept = (sourceId) => {
     // console.log(sourceId, "sourceId");
-    dispatch(acceptFriendRequestAction(sourceId, userInfo._id, userInfo.token));
+    dispatch(
+      acceptFriendRequestAction(
+        sourceId,
+        userInfo._id,
+        userInfo.token,
+        notifications?.friendRequests
+      )
+    );
     console.log("accept clicked");
   };
   return (
@@ -25,32 +32,28 @@ const Notifications = () => {
         <h1>Friend Requests</h1>
         <div className="lists">
           <ul>
-            {notifications?.friendRequests?.map((item, index) =>
-              acceptFriendRequest
-                ? acceptFriendRequest._id !== item.details._id
-                : true && (
-                    <li key={index}>
-                      <div>
-                        <span>
-                          <img src="/imgs/solo-clash.webp" alt="profile" />
-                        </span>
-                        <p>{item?.details?.username}</p>
-                      </div>
-                      <div>
-                        <button
-                          type="submit"
-                          className="invite-button"
-                          onClick={() => handleAccept(item.details._id)}
-                        >
-                          Accept
-                        </button>
-                        <button type="submit" className="delete-button">
-                          Decline
-                        </button>
-                      </div>
-                    </li>
-                  )
-            )}
+            {notifications?.friendRequests?.map((item, index) => (
+              <li key={index}>
+                <div>
+                  <span>
+                    <img src="/imgs/solo-clash.webp" alt="profile" />
+                  </span>
+                  <p>{item?.details?.username}</p>
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    className="invite-button"
+                    onClick={() => handleAccept(item.details._id)}
+                  >
+                    Accept
+                  </button>
+                  <button type="submit" className="delete-button">
+                    Decline
+                  </button>
+                </div>
+              </li>
+            ))}
             <li>
               <div>
                 <span>

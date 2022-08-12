@@ -20,6 +20,10 @@ import {
   USER_FRIEND_CANCEL_FAIL,
   ACCEPT_FRIEND_REQUEST_SUCCESS,
   ACCEPT_FRIEND_REQUEST_FAILED,
+  REMOVE_FRIEND_SUCCESS,
+  REMOVE_FRIEND_FAILED,
+  FRIENDS_LOAD_SUCCESS,
+  FRIEND_ADD_SUCCESS,
 } from "./../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -105,13 +109,53 @@ export const userCancelFriendRequestReducer = (state = null, action) => {
   }
 };
 
-export const acceptFriendRequestReducer = (state = null, action) => {
+// let friends = [];
+
+export const friendsReducer = (state = [], action) => {
+  const newState = [...state];
   switch (action.type) {
-    case ACCEPT_FRIEND_REQUEST_SUCCESS:
-      return { success: true, data: action.payload };
-    case ACCEPT_FRIEND_REQUEST_FAILED:
-      return { success: false, error: action.payload };
+    case FRIENDS_LOAD_SUCCESS:
+      newState.push(...action.payload);
+      return newState;
+    case FRIEND_ADD_SUCCESS:
+      if (
+        newState.findIndex(
+          (i) => i.details._id === action.payload.details._id
+        ) < 0
+      ) {
+        newState.push(action.payload);
+      }
+      return newState;
+    case REMOVE_FRIEND_SUCCESS:
+      const newFriendsList = newState.filter(
+        (i) => i.details._id !== action.payload.details._id
+      );
+      console.log(newFriendsList, "newList");
+      return newFriendsList;
     default:
       return state;
   }
 };
+
+// export const acceptFriendRequestReducer = (state = null, action) => {
+//   switch (action.type) {
+//     case ACCEPT_FRIEND_REQUEST_SUCCESS:
+//       friends.push(action.payload);
+//       return { success: true, friends };
+//     case ACCEPT_FRIEND_REQUEST_FAILED:
+//       return { success: false, error: action.payload };
+//     default:
+//       return state;
+//   }
+// };
+
+// export const removeFriendRequestReducer = (state = null, action) => {
+//   switch (action.type) {
+//     case REMOVE_FRIEND_SUCCESS:
+//       return { success: true };
+//     case REMOVE_FRIEND_FAILED:
+//       return { success: false, error: action.payload };
+//     default:
+//       return state;
+//   }
+// };

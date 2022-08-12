@@ -12,6 +12,7 @@ const {
   sendRequest,
   cancelRequest,
   acceptRequest,
+  removeFriend,
   decryptUserDetails,
 } = require("../controllers/userController");
 
@@ -23,6 +24,7 @@ router.route("/search/").get(protect, listUser);
 router.post("/request/", protect, sendRequest);
 router.post("/cancel/", protect, cancelRequest);
 router.post("/accept/", protect, acceptRequest);
+router.post("/remove/", protect, removeFriend);
 router.post("/decrypt/", decryptUserDetails);
 
 module.exports = router;

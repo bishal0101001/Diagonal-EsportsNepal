@@ -4,17 +4,17 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Header from "./components/Header";
-import HomePage from "./pages/HomePage";
-import Registers from "./pages/Registers";
-import Login from "./pages/Login";
-import Profile from "./pages/Profile";
-import Events from "./pages/Events";
-import Teams from "./pages/Teams";
-import Notifications from "./pages/Notifications";
-import GrandEvent from "./pages/Tournament/GrandEvent";
-import SquadClash from "./pages/Tournament/SquadClash";
-import DeadlyDuo from "./pages/Tournament/DeadlyDuo";
-import SoloRule from "./pages/Tournament/SoloRule";
+import HomePage from "./screens/HomePage";
+import Registers from "./screens/Registers";
+import Login from "./screens/Login";
+import Profile from "./screens/Profile";
+import Events from "./screens/Events";
+import Teams from "./screens/Teams";
+import Notifications from "./screens/Notifications";
+import GrandEvent from "./screens/Tournament/GrandEvent";
+import SquadClash from "./screens/Tournament/SquadClash";
+import DeadlyDuo from "./screens/Tournament/DeadlyDuo";
+import SoloRule from "./screens/Tournament/SoloRule";
 import "./style.min.css";
 // import { useEffectOnce } from "./utils/useEffectOnce";
 import {
@@ -22,10 +22,12 @@ import {
   // setLiveNotificationAction,
   setNotificationAction,
   cancelFriendRequestAction,
-} from "./actions/socketAction";
+  acceptFriendRequestAction,
+  removeFriendAction,
+} from "./actions/socketActions";
 // import { friendRequest } from "./actions/userActions";
 import { decryptUserInfo } from "./utils/decryptUserInfo";
-import { logout, setLoginData } from "./actions/userActions";
+import { friendsAction, logout, setLoginData } from "./actions/userActions";
 
 function App() {
   const [socket, setSocket] = React.useState(null);
@@ -44,7 +46,13 @@ function App() {
         })
         .then((res) => {
           res.pool.friendRequests &&
-            dispatch(setNotificationAction(res.pool.friendRequests));
+            dispatch(
+              setNotificationAction(res.pool.friendRequests, res.friends)
+            );
+          return res;
+        })
+        .then((res) => {
+          res.friends && dispatch(friendsAction(res.friends));
           return res._id;
         })
         .then((id) => {
@@ -85,7 +93,6 @@ function App() {
 
   useEffect(() => {
     socket?.on("cancelFriendRequest", (data) => {
-      console.log(data, "live req");
       dispatch(cancelFriendRequestAction(data));
     });
   });
@@ -93,6 +100,14 @@ function App() {
   useEffect(() => {
     socket?.on("acceptFriendRequest", (data) => {
       console.log(data, "data from acceptFriendRequests");
+      dispatch(acceptFriendRequestAction(data));
+    });
+  });
+
+  useEffect(() => {
+    socket?.on("removeFriend", (data) => {
+      console.log(data, "removeFriend");
+      dispatch(removeFriendAction(data));
     });
   });
 
